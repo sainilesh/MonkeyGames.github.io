@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameStore</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Caveat:wght@400;700&family=Lobster&family=Monoton&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display+SC:ital,wght@0,400;0,700;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,700&family=Work+Sans:ital,wght@0,400;0,700;1,700&display=swap');
+    .genre-dropdown {
+    max-height: 200px; /* Adjust height to fit approx 5 genres */
+    overflow-y: auto; 
+    scrollbar-color: transparent transparent; /* Hide scrollbar track */
+    font-family: Bree Serif;
+    background-color: #202336;
+}
+
+#genre-dropdown::-webkit-scrollbar {
+    width: 0px; /* Hides scrollbar in Chrome, Safari, and Edge */
+    display: none;
+}
+
+
+.genre-dropdown a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 8px 10px;
+}
+
+.genre-dropdown a:hover {
+    background-color: #333;
+}
+
+/* Ensure visibility when toggled */
+.genre-dropdown.d-none {
+    display: none !important;
+}
+
+.genre-dropdown.active {
+    display: block !important;
+}
+
+    .main-content {
+       flex-grow: 1;
+       padding: 20px;
+       margin-left: 220px; /* Space for sidebar */
+       margin-top: 80px; /* Space for navbar */
+   }
+    .container {
+       text-align: center;
+       padding: 20px;
+    }   
+   #game-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 cards per row by default */
+    gap: 15px; /* Space between cards */
+    padding: 20px;
+    justify-content: center;
+}
+
+/* Ensure cards have uniform width */
+.game-card {
+    background-color: #202336;
+    color: white;
+    font-family: 'Bree Serif', serif;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    width: 100%; /* Take full width inside grid */
+    
+}
+.game-info{
+    padding: 10px;
+    text-align: center;
+}
+.game-card a {
+    text-decoration: none; /* Remove underline */
+    color: white; /* Set text color to white */
+    display: block; /* Make the entire card clickable */
+    
+}
+
+.game-card h3, 
+.game-card p {
+    color: white; /* Ensures text inside the card is white */
+   
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+    #game-list {
+        grid-template-columns: repeat(3, 1fr); /* 3 per row on medium screens */
+    }
+}
+
+@media (max-width: 900px) {
+    #game-list {
+        grid-template-columns: repeat(2, 1fr); /* 2 per row on smaller screens */
+    }
+}
+
+@media (max-width: 600px) {
+    #game-list {
+        grid-template-columns: repeat(1, 1fr); /* 1 per row on mobile */
+    }
+}
+
+   .game-card:hover {
+       transform: scale(1.05);
+       box-shadow: 0 0 8px rgba(0, 255, 255, 0.8); /* Brighter Cyan Glow on Hover */
+   }
+   .sidebar {
+       width: 200px;
+       background: #1e1e1e;
+       padding: 20px;
+       height: calc(100vh - 80px); /* Subtracts navbar height */
+       position: fixed;
+       top: 80px; /* Pushes it down below navbar */
+       left: 0;
+       
+   }
+   .sidebar .logo {
+       font-size: 24px;
+       font-weight: bold;
+       color: #fff;
+       margin-bottom: 20px;
+   }
+   .sidebar ul {
+       list-style: none;
+       padding: 0;
+   }
+   .sidebar ul li {
+       padding: 15px 10px;
+       font-family: Bree Serif;
+   }
+   .sidebar ul li a {
+       color: #bbb;
+       text-decoration: none;
+       display: flex;
+       align-items: center;
+   }
+   .sidebar ul li a i {
+       margin-right: 10px;
+   }
+   .sidebar ul li.active a {
+       color: #fff;
+       font-weight: bold;    
+   }
+   .nav-bottom {
+margin-top: 30vh;
+}
+.navbar {
+   width: 100%;
+   height: 80px; /* Ensures it doesn’t collapse */
+   background: #1e1e1e;
+   padding: 15px 20px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   position: fixed;
+   top: 0;
+   left: 0;
+   right: 0;
+   z-index: 1000;
+}
+.search-bar {
+display: flex;
+align-items: center;
+background-color: #22243A; /* Slightly lighter than navbar */
+border-radius: 8px;
+padding: 5px;
+width: 300px;
+border: 1.5px solid #008FBA; /* Cyan-blue border */
+box-shadow: 0px 0px 8px rgba(0, 143, 186, 0.2); /* Soft cyan glow */
+margin-left: 1.5vw;
+}
+
+.search-bar input {
+background: transparent;
+border: none;
+outline: none;
+color: #E0E0E0; /* Light gray text */
+font-family: "Bree Serif", serif;
+font-size: 16px;
+padding: 8px;
+flex: 1; /* Takes up remaining space */
+}
+
+.search-bar input::placeholder {
+color: #B0B3C0; /* Subtle gray */
+font-style: italic;
+}
+
+.search-bar button {
+background-color: #008FBA; /* Cyan-blue */
+border: none;
+padding: 8px 12px;
+border-radius: 6px;
+cursor: pointer;
+transition: all 0.3s ease-in-out;
+}
+
+.search-bar button i {
+color: #E0E0E0; /* Light gray icon */
+font-size: 18px;
+}
+
+.search-bar button:hover {
+background-color: #0078A0; /* Slightly darker cyan */
+}
+
+.search-bar button:active {
+transform: scale(0.95);
+}
+
+.subscribe-btn {
+background: linear-gradient(45deg, #ff416c, #ff4b2b);
+color: white;
+border: none;
+padding: 8px 15px;
+border-radius: 25px;
+cursor: pointer;
+font-size: 0.9rem;
+font-weight: bold;
+transition: all 0.3s ease-in-out;
+box-shadow: 0 4px 10px rgba(255, 75, 43, 0.5);
+margin-left: auto;
+}
+.subscribe-btn:hover {
+background: linear-gradient(45deg, #ff4b2b, #ff416c);
+box-shadow: 0 6px 15px rgba(255, 75, 43, 0.7);
+transform: scale(1.05);
+}
+.user-status {
+display: flex;
+align-items: center;
+}
+.user-avatar {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+margin-left: 10px;
+} 
+.game-image {
+width: 100%;
+height: 200px;
+object-fit: cover;
+}
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(25vw, 1fr));
+    gap: 20px;
+}
+.rating-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    font-size: 16px;
+    color: white;
+}
+
+.rating-box {
+    background: transparent;
+    border: 2px solid #00ffff;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-shadow: 0 0 8px #00ffff;
+    box-shadow: 0 0 12px #00ffff;
+}
+/* Pagination Styling */
+.pagination-container {
+    text-align: center;
+    margin: 20px 0;
+    font-family: "Bree Serif";
+}
+
+.page-btn {
+    background: #202336;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.page-btn:hover {
+    background: #19677c;
+}
+
+.page-btn.active {
+    background: #14c2cb;
+    font-weight: bold;
+}
+#search-dropdown {
+        position: absolute;
+        top: 100%; /* Place below the search bar */
+        left: 0;
+        width: 20%;
+        background: #202336;
+        margin-left: 16.5vw;
+        border-radius: 10px;
+        max-height: 200px;
+        overflow-y: auto;
+        display: none; /* Hide initially */
+        z-index: 1000; /* Ensure it's above other elements */
+    }
+
+    .search-suggestion {
+        padding: 10px;
+        color: white;
+        cursor: pointer;
+        border-bottom: 1px solid #03032a;
+        font-family: Bree Serif;
+    }
+
+    .search-suggestion:hover {
+        background: #1ba7d6;
+    }
+    #search-dropdown {
+        max-height: 300px; /* Adjust as needed */
+        overflow-y: auto; /* Allows scrolling but hides scrollbar */
+        scrollbar-width: none; /* Hides scrollbar in Firefox */
+    }
+
+    #search-dropdown::-webkit-scrollbar {
+        width: 0px; /* Hides scrollbar in Chrome, Safari, and Edge */
+        display: none;
+    }
+</style>
+</head>
+<body style="background-color: #181825;">
+    <div class="sidebar" style="background-color: #1A1A2E;">
+        <ul style="margin-top: 4.3vh;">
+            <li><a href="new.html"><i class="fas fa-home"></i> Home</a></li>
+            <div class="sidebar-item">
+                <button id="categoryDropdown" class="btn btn-secondary w-100 category" style="font-family: Bree Serif;background-color: #1A1A2E;border: 0px;text-align: left;"><i class="fas fa-list"style="margin-right:10px"></i><strong>Categories</strong></button>
+                <div id="genreList" class="genre-dropdown d-none"></div>
+              </div>
+            <li><a href="mylist.html"><i class="fas fa-heart"></i> Wishlist</a></li>
+        </ul>
+    </div> 
+    <div class="main-content">
+        <header class="navbar" style="background-color: #1A1A2E;">
+            <h2 class="logo" style="font-family: Bree Serif;color: white;">MonkeyGames</h2>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search for games..." autocomplete="off">
+                <button><i class="fas fa-search"></i></button>
+                <div id="search-dropdown" class="search-dropdown"></div>
+            </div>
+            <button class="subscribe-btn" style="font-family: Bree Serif;">Subscribe</button>
+            <div class="user-status">
+                <img src="https://assets.onecompiler.app/4398p3nh5/43bkmps3a/png-transparent-male-avatar-boy-face-man-user-flat-classy-users-icon-thumbnail.png" alt="User Avatar" class="user-avatar">
+            </div>
+        </header>
+        <div class="popular-games-header mt-3">
+            <h2 style="font-family: Bree Serif;color: white;"></h2>
+        </div>
+        <div class="game-container" id="game-list"></div>
+        <div id="pagination" class="pagination-container"></div>
+    </div>
+    <script>
+        const API_KEY = 'c5082b657a834213a7791b7ea25f9332';
+        let currentPage = 1;
+        const pageSize = 12;
+        async function fetchGamesByGenre(genreId, page = 1) {
+            try {
+                const response = await fetch(`https://api.rawg.io/api/games?key=${API_KEY}&genres=${genreId}&page_size=${pageSize}&page=${page}`);
+                const data = await response.json();
+                if (data.results) {
+                    displayGames(data.results);
+                    setupPagination(data.count, page);
+                }
+            } catch (error) {
+                console.error("Error fetching genre games:", error);
+            }
+        }
+        function displayGames(games) {
+            const gameContainer = document.getElementById("game-list");
+            gameContainer.innerHTML = "";
+            games.forEach(game => {
+                const gameCard = document.createElement("div");
+                gameCard.classList.add("game-card");
+                gameCard.innerHTML = `
+                    <a href="game-details.html?game=${game.slug}" class="game-link">
+                        <img src="${game.background_image || 'default-image.jpg'}" alt="${game.name}" class="game-image">
+                        <div class="game-info">
+                            <h3 style="font-size:20px">${game.name}</h3>
+                            <p class="genre" style="font-size:13px">${game.genres.map(genre => genre.name).join(', ') || "N/A"}</p>
+                            <div class="rating-container">
+                                <span class="rating" style="margin-left:6vw;background-color:transparent;">⭐ ${game.rating || "N/A"}</span>
+                            </div>
+                        </div>
+                    </a>
+                `;
+                gameContainer.appendChild(gameCard);
+            });
+        }
+        function setupPagination(totalGames, currentPage) {
+            const totalPages = Math.ceil(totalGames / pageSize);
+            const paginationContainer = document.getElementById("pagination");
+            paginationContainer.innerHTML = "";
+            for (let i = 1; i <= totalPages && i <= 5; i++) {
+                const pageBtn = document.createElement("button");
+                pageBtn.innerText = i;
+                pageBtn.classList.add("page-btn");
+                if (i === currentPage) pageBtn.classList.add("active");
+                pageBtn.addEventListener("click", () => {
+                    fetchGamesByGenre(getGenreFromURL(), i);
+                });
+                paginationContainer.appendChild(pageBtn);
+            }
+        }
+        function getGenreFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get("genre");
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+            const genreId = getGenreFromURL();
+            if (genreId) {
+                fetchGamesByGenre(genreId);
+            }
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+    const categoryDropdown = document.getElementById("categoryDropdown");
+    const genreList = document.getElementById("genreList");
+
+    if (categoryDropdown && genreList) {
+        categoryDropdown.addEventListener("click", () => {
+            genreList.classList.toggle("active"); // Fix: use 'active' instead of 'd-none'
+        });
+    }
+});
+
+
+
+async function fetchGenres() {
+    try {
+        const response = await fetch(`https://api.rawg.io/api/genres?key=c5082b657a834213a7791b7ea25f9332`);
+        const data = await response.json();
+        const genreList = document.getElementById("genreList");
+
+        if (!genreList) return;
+
+        genreList.innerHTML = ""; // Clear previous content
+
+        data.results.forEach(genre => {
+            const genreItem = document.createElement("a");
+            genreItem.href = `categories.html?genre=${genre.slug}`;
+            genreItem.textContent = genre.name;
+            genreItem.classList.add("dropdown-item");
+            genreItem.style.display = "block";
+            genreItem.style.color = "white";
+            genreItem.style.padding = "8px 10px";
+            genreItem.style.textDecoration = "none";
+
+            genreItem.addEventListener("mouseover", () => {
+                genreItem.style.backgroundColor = "#333";
+            });
+            genreItem.addEventListener("mouseout", () => {
+                genreItem.style.backgroundColor = "transparent";
+            });
+
+            genreList.appendChild(genreItem);
+        });
+
+    } catch (error) {
+        console.error("Error fetching genres:", error);
+    }
+}
+
+// Call fetchGenres when the page loads
+document.addEventListener("DOMContentLoaded", fetchGenres);
+function displayGenres(genres) {
+    genreList.innerHTML = "";
+    genres.forEach((genre, index) => {
+        const genreItem = document.createElement("div");
+        genreItem.classList.add("genre-item");
+
+        genreItem.innerHTML = `<a href="categories.html?genre=${genre.id}" class="genre-link">${genre.name}</a>`;
+
+        genreList.appendChild(genreItem);
+    });
+}
+
+// Initialize
+fetchGenres();
+    // Get the genre ID from the URL
+const urlParams = new URLSearchParams(window.location.search);
+const genreId = urlParams.get("genre");
+
+// Fetch genre details to get the genre name
+async function fetchGenreName() {
+    try {
+        const response = await fetch(`https://api.rawg.io/api/genres/${genreId}?key=${API_KEY}`);
+        const data = await response.json();
+
+        if (data.name) {
+            document.querySelector(".popular-games-header h2").textContent = `${data.name} Games`;
+        }
+    } catch (error) {
+        console.error("Error fetching genre name:", error);
+    }
+}
+        const searchInput = document.getElementById("search-input");
+    const searchDropdown = document.getElementById("search-dropdown");
+
+    searchInput.addEventListener("input", async function () {
+        let query = searchInput.value.trim();
+
+        if (query.length > 2) {
+            searchDropdown.style.display = "block";
+            fetchSearchResults(query);
+        } else {
+            searchDropdown.style.display = "none";
+        }
+    });
+
+    async function fetchSearchResults(query) {
+        try {
+            const response = await fetch(`https://api.rawg.io/api/games?key=${API_KEY}&search=${query}&page_size=5`);
+            const data = await response.json();
+
+            if (data.results) {
+                displaySearchSuggestions(data.results);
+            }
+        } catch (error) {
+            console.error("Error fetching search results:", error);
+        }
+    }
+
+    function displaySearchSuggestions(games) {
+        searchDropdown.innerHTML = ""; // Clear previous results
+
+        games.forEach(game => {
+            const suggestionItem = document.createElement("div");
+            suggestionItem.classList.add("search-suggestion");
+            suggestionItem.innerText = game.name;
+
+            suggestionItem.addEventListener("click", () => {
+                searchInput.value = "";  // Clears the search bar
+                searchDropdown.style.display = "none"; // Hide dropdown
+                window.location.href = `game-details.html?game=${game.slug}`;
+            });
+
+            searchDropdown.appendChild(suggestionItem);
+        });
+
+        searchDropdown.style.display = "block"; // Show dropdown
+    }
+
+    // ✅ Hide search dropdown when clicking outside
+    document.addEventListener("click", (event) => {
+        if (!searchInput.contains(event.target) && !searchDropdown.contains(event.target)) {
+            searchDropdown.style.display = "none";
+        }
+    });
+// Call function if genreId exists
+if (genreId) {
+    fetchGenreName();
+}
+
+</script>
+</body>
+
+</html>

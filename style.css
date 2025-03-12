@@ -1,0 +1,105 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #fff;
+    display: flex;
+    margin: 0;
+}
+.sidebar {
+    width: 250px;
+    background: #1e1e1e;
+    padding: 20px;
+    height: 100vh;
+}
+.sidebar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 20px;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+.sidebar ul li {
+    padding: 15px 10px;
+}
+.sidebar ul li a {
+    color: #bbb;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+.sidebar ul li a i {
+    margin-right: 10px;
+}
+.sidebar ul li.active a {
+    color: #fff;
+    font-weight: bold;
+}
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+}
+.user-status {
+    display: flex;
+    align-items: center;
+}
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+.featured-game {
+    display: flex;
+    align-items: center;
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.featured-game img {
+    width: 200px;
+    border-radius: 10px;
+    margin-right: 20px;
+}
+.game-info {
+    flex-grow: 1;
+}
+.rating {
+    background: #444;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+    margin: 10px 0;
+}
+.buy-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+.game-card {
+    background: #1e1e1e;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+}
+.game-card img {
+    width: 100%;
+    border-radius: 10px;
+}
